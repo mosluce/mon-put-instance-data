@@ -10,8 +10,8 @@ import (
 	"time"
 
 	"github.com/aws/aws-sdk-go-v2/aws/external"
-	. "github.com/mlabouardy/mon-put-instance-data/metrics"
-	. "github.com/mlabouardy/mon-put-instance-data/services"
+	. "github.com/poddworks/mon-put-instance-data/metrics"
+	. "github.com/poddworks/mon-put-instance-data/services"
 	"github.com/urfave/cli"
 )
 
@@ -55,8 +55,8 @@ func main() {
 	app := cli.NewApp()
 	app.Name = "mon-put-instance-data"
 	app.Usage = "Publish Custom Metrics to CloudWatch"
-	app.Version = "1.0.0"
-	app.Author = "Mohamed Labouardy"
+	app.Version = "1.1.0"
+	app.Author = "Jeffrey Jen"
 	app.Flags = []cli.Flag{
 		cli.BoolFlag{
 			Name:  "memory",

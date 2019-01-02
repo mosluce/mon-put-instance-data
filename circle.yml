@@ -3,7 +3,7 @@ jobs:
   build:
     docker:
       - image: golang:1.8
-    working_directory: /go/src/github.com/mlabouardy/mon-put-instance-data
+    working_directory: /go/src/github.com/poddworks/mon-put-instance-data
     steps:
       - checkout
       - run:
@@ -42,14 +42,14 @@ jobs:
        - setup_remote_docker
        - run:
            name: Build Docker Image
-           command: docker build -t mlabouardy/mon-put-instance-data:latest .
+           command: docker build -t poddworks/mon-put-instance-data:latest .
        - deploy:
             name: Push to DockerHub
             command: |
               docker login -u$DOCKERHUB_LOGIN -p$DOCKERHUB_PASSWORD
-              docker tag mlabouardy/mon-put-instance-data:latest mlabouardy/mon-put-instance-data:${CIRCLE_SHA1}
-              docker push mlabouardy/mon-put-instance-data:latest
-              docker push mlabouardy/mon-put-instance-data:${CIRCLE_SHA1}
+              docker tag poddworks/mon-put-instance-data:latest poddworks/mon-put-instance-data:${CIRCLE_SHA1}
+              docker push poddworks/mon-put-instance-data:latest
+              docker push poddworks/mon-put-instance-data:${CIRCLE_SHA1}
 
 workflows:
   version: 2

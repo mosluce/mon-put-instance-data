@@ -1,5 +1,5 @@
 FROM alpine
-MAINTAINER mlabouardy <mohamed@labouardy.com>
+MAINTAINER Jeffrey Jen <yihungjen@gmail.com>
 
 ENV AWS_ACCESS_KEY_ID access
 ENV AWS_SECRET_ACCESS_KEY secret

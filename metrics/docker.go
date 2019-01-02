@@ -8,7 +8,7 @@ import (
 	"strings"
 
 	"github.com/aws/aws-sdk-go-v2/service/cloudwatch"
-	. "github.com/mlabouardy/mon-put-instance-data/services"
+	. "github.com/poddworks/mon-put-instance-data/services"
 	"github.com/shirou/gopsutil/docker"
 )
 

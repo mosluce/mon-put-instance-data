@@ -1,5 +1,5 @@
-[![Docker Stars](https://img.shields.io/docker/pulls/mlabouardy/mon-put-instance-data.svg)](https://hub.docker.com/r/mlabouardy/mon-put-instance-data/) 
-[![MIT License](http://img.shields.io/badge/license-MIT-blue.svg?style=flat)](LICENSE) [![Docker Stars](https://img.shields.io/github/issues/mlabouardy/mon-put-instance-data.svg)](https://github.com/mlabouardy/mon-put-instance-data/issues)  
+[![Docker Stars](https://img.shields.io/docker/pulls/poddworks/mon-put-instance-data.svg)](https://hub.docker.com/r/poddworks/mon-put-instance-data/) 
+[![MIT License](http://img.shields.io/badge/license-MIT-blue.svg?style=flat)](LICENSE) [![Docker Stars](https://img.shields.io/github/issues/poddworks/mon-put-instance-data.svg)](https://github.com/poddworks/mon-put-instance-data/issues)  
 
 ## Download
 
@@ -46,7 +46,7 @@ mon-put-instance-data --memory --swap --disk --network --docker --duration 1
 Use the official Docker image:
 
 ```
-docker run -d -e AWS_INSTANCE_ID="" -e AWS_ACCESS_KEY_ID="" -e AWS_SECRET_ACCESS_KEY="" --name collector mlabouardy/mon-put-instance-data --memory --swap --interval 1
+docker run -d -e AWS_INSTANCE_ID="" -e AWS_ACCESS_KEY_ID="" -e AWS_SECRET_ACCESS_KEY="" --name collector poddworks/mon-put-instance-data --memory --swap --interval 1
 ```
 
 If you omit the `AWS_INSTANCE_ID` it'll get the instance id from `http://169.254.169.254/latest/meta-data/instance-id`
