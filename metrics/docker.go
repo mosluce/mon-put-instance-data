@@ -23,7 +23,11 @@ var usage_history map[string]float64
 // Docker Time history
 var last_time_at time.Time
 
-const nanoseconds = 1e9
+const (
+	nanoseconds = 1e9
+
+	maxMetricDataNum = 20
+)
 
 // On older systems, the control groups might be mounted on /cgroup
 func getCgroupMountPath() (string, error) {
@@ -114,7 +118,15 @@ func (d Docker) Collect(instanceID string, c CloudWatchService, namespace string
 	}
 
 	// Dispatch collected metric data
-	c.Publish(metricArr, namespace)
+	for idx := 0; idx < len(metricArr); idx += maxMetricDataNum {
+		var slice []cloudwatch.MetricDatum
+		if idx+maxMetricDataNum >= len(metricArr) {
+			slice = metricArr[idx:]
+		} else {
+			slice = metricArr[idx : idx+maxMetricDataNum]
+		}
+		c.Publish(slice, namespace)
+	}
 
 	// Swap data, continue from here
 	usage_history, last_time_at = new_usage_history, time.Now()
