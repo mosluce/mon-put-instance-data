@@ -83,10 +83,10 @@ func main() {
 			Usage: "AWS region",
 			Value: "us-east-1",
 		},
-		cli.IntFlag{
+		cli.StringFlag{
 			Name:  "interval",
 			Usage: "Time interval",
-			Value: 5,
+			Value: "1m",
 		},
 		cli.BoolFlag{
 			Name:  "once",
@@ -132,7 +132,7 @@ func main() {
 			Config: cfg,
 		}
 
-		interval := c.Int("interval")
+		interval := c.String("interval")
 
 		fmt.Printf("Features enabled: %s\n", strings.Join(enabledMetrics, ", "))
 
@@ -143,9 +143,13 @@ func main() {
 		if c.Bool("once") {
 			collect()
 		} else {
-			fmt.Printf("Interval: %d minutes\n", interval)
+			fmt.Printf("Interval: %s\n", interval)
 
-			duration := time.Duration(interval) * time.Minute
+			duration, err := time.ParseDuration(interval)
+			if err != nil {
+				panic(err)
+			}
+
 			for range time.Tick(duration) {
 				collect()
 			}
