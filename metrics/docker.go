@@ -6,7 +6,9 @@ import (
 	"log"
 	"os/exec"
 	"strings"
+	"time"
 
+	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/cloudwatch"
 	. "github.com/poddworks/mon-put-instance-data/services"
 	"github.com/shirou/gopsutil/docker"
@@ -14,6 +16,14 @@ import (
 
 // Docker metric entity
 type Docker struct{}
+
+// Docker CPU Usage metric history
+var usage_history map[string]float64
+
+// Docker Time history
+var last_time_at time.Time
+
+const nanoseconds = 1e9
 
 // On older systems, the control groups might be mounted on /cgroup
 func getCgroupMountPath() (string, error) {
@@ -40,6 +50,10 @@ func (d Docker) Collect(instanceID string, c CloudWatchService, namespace string
 		log.Fatal(err)
 	}
 
+	new_usage_history, new_last_time_at := make(map[string]float64), time.Now()
+
+	var metricArr []cloudwatch.MetricDatum
+
 	for _, container := range containers {
 		dimensions := make([]cloudwatch.Dimension, 0)
 		dimensionKey1 := "InstanceId"
@@ -50,17 +64,17 @@ func (d Docker) Collect(instanceID string, c CloudWatchService, namespace string
 		dimensionKey2 := "ContainerId"
 		dimensions = append(dimensions, cloudwatch.Dimension{
 			Name:  &dimensionKey2,
-			Value: &container.ContainerID,
+			Value: aws.String(container.ContainerID),
 		})
 		dimensionKey3 := "ContainerName"
 		dimensions = append(dimensions, cloudwatch.Dimension{
 			Name:  &dimensionKey3,
-			Value: &container.Name,
+			Value: aws.String(container.Name),
 		})
 		dimensionKey4 := "DockerImage"
 		dimensions = append(dimensions, cloudwatch.Dimension{
 			Name:  &dimensionKey4,
-			Value: &container.Image,
+			Value: aws.String(container.Image),
 		})
 
 		containerMemory, err := docker.CgroupMem(container.ContainerID, fmt.Sprintf("%s/memory/docker", base))
@@ -69,7 +83,7 @@ func (d Docker) Collect(instanceID string, c CloudWatchService, namespace string
 		}
 
 		containerMemoryData := constructMetricDatum("ContainerMemory", float64(containerMemory.MemUsageInBytes), cloudwatch.StandardUnitBytes, dimensions)
-		c.Publish(containerMemoryData, namespace)
+		metricArr = append(metricArr, containerMemoryData...)
 
 		containerCPU, err := docker.CgroupCPU(container.ContainerID, fmt.Sprintf("%s/cpuacct/docker", base))
 		if err != nil {
@@ -77,11 +91,39 @@ func (d Docker) Collect(instanceID string, c CloudWatchService, namespace string
 		}
 
 		containerCPUUserData := constructMetricDatum("ContainerCPUUser", float64(containerCPU.User), cloudwatch.StandardUnitSeconds, dimensions)
-		c.Publish(containerCPUUserData, namespace)
+		metricArr = append(metricArr, containerCPUUserData...)
 
 		containerCPUSystemData := constructMetricDatum("ContainerCPUSystem", float64(containerCPU.System), cloudwatch.StandardUnitSeconds, dimensions)
-		c.Publish(containerCPUSystemData, namespace)
+		metricArr = append(metricArr, containerCPUSystemData...)
 
-		log.Printf("Docker - Container:%s Memory:%v User:%v System:%v\n", container.Name, containerMemory.MemMaxUsageInBytes, containerCPU.User, containerCPU.System)
+		var percentCPU float64 = -1
+
+		containerCPUUsage, err := docker.CgroupCPUUsageDocker(container.ContainerID)
+		if err != nil {
+			log.Fatal(err)
+		} else {
+			new_usage_history[container.ContainerID] = containerCPUUsage
+			if pastContainerCPUUsage, okay := usage_history[container.ContainerID]; okay {
+				percentCPU = (containerCPUUsage - pastContainerCPUUsage) / float64(new_last_time_at.Sub(last_time_at)) * 100 * nanoseconds
+				containerCPUUsageData := constructMetricDatum("ContainerCPUUsage", percentCPU, cloudwatch.StandardUnitPercent, dimensions)
+				metricArr = append(metricArr, containerCPUUsageData...)
+			}
+		}
+
+		log.Printf("Docker - Container:%s Memory:%v User:%v System:%v Percent:%v\n", container.Name, containerMemory.MemMaxUsageInBytes, containerCPU.User, containerCPU.System, percentCPU)
 	}
+
+	// Dispatch collected metric data
+	c.Publish(metricArr, namespace)
+
+	// Swap data, continue from here
+	usage_history, last_time_at = new_usage_history, time.Now()
+}
+
+func init() {
+	// initializae usage_history mapping
+	usage_history = make(map[string]float64)
+
+	// record timestamp
+	last_time_at = time.Now()
 }
