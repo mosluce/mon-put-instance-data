@@ -83,7 +83,8 @@ func (d Docker) Collect(instanceID string, c CloudWatchService, namespace string
 
 		containerMemory, err := docker.CgroupMem(container.ContainerID, fmt.Sprintf("%s/memory/docker", base))
 		if err != nil {
-			log.Fatal(err)
+			log.Println(err)
+			continue
 		}
 
 		containerMemoryData := constructMetricDatum("ContainerMemory", float64(containerMemory.MemUsageInBytes), cloudwatch.StandardUnitBytes, dimensions)
@@ -91,7 +92,8 @@ func (d Docker) Collect(instanceID string, c CloudWatchService, namespace string
 
 		containerCPU, err := docker.CgroupCPU(container.ContainerID, fmt.Sprintf("%s/cpuacct/docker", base))
 		if err != nil {
-			log.Fatal(err)
+			log.Println(err)
+			continue
 		}
 
 		containerCPUUserData := constructMetricDatum("ContainerCPUUser", float64(containerCPU.User), cloudwatch.StandardUnitSeconds, dimensions)
@@ -104,7 +106,8 @@ func (d Docker) Collect(instanceID string, c CloudWatchService, namespace string
 
 		containerCPUUsage, err := docker.CgroupCPUUsageDocker(container.ContainerID)
 		if err != nil {
-			log.Fatal(err)
+			log.Println(err)
+			continue
 		} else {
 			new_usage_history[container.ContainerID] = containerCPUUsage
 			if pastContainerCPUUsage, okay := usage_history[container.ContainerID]; okay {
