@@ -5,6 +5,12 @@ import (
 	. "github.com/poddworks/mon-put-instance-data/services"
 )
 
+const (
+	nanoseconds = 1e9
+
+	maxMetricDataNum = 20
+)
+
 // Metric entity
 type Metric interface {
 	Collect(string, CloudWatchService, string)

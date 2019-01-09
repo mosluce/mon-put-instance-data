@@ -23,12 +23,6 @@ var usage_history map[string]float64
 // Docker Time history
 var last_time_at time.Time
 
-const (
-	nanoseconds = 1e9
-
-	maxMetricDataNum = 20
-)
-
 // On older systems, the control groups might be mounted on /cgroup
 func getCgroupMountPath() (string, error) {
 	out, err := exec.Command("grep", "-m1", "cgroup", "/proc/mounts").Output()

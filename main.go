@@ -78,6 +78,10 @@ func main() {
 			Name:  "docker",
 			Usage: "Collect containers metrics",
 		},
+		cli.BoolFlag{
+			Name:  "swarm",
+			Usage: "Collect swarm service metrics",
+		},
 		cli.StringFlag{
 			Name:  "region",
 			Usage: "AWS region",
@@ -120,6 +124,10 @@ func main() {
 		if c.Bool("docker") {
 			metrics = append(metrics, Docker{})
 			enabledMetrics = append(enabledMetrics, "docker")
+		}
+		if c.Bool("swarm") {
+			metrics = append(metrics, Swarm{})
+			enabledMetrics = append(enabledMetrics, "swarm")
 		}
 
 		cfg, err := external.LoadDefaultAWSConfig()
