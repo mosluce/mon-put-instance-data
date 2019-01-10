@@ -2,6 +2,14 @@
 
 
 [[projects]]
+  digest = "1:f9ae348e1f793dcf9ed930ed47136a67343dbd6809c5c91391322267f4476892"
+  name = "github.com/Microsoft/go-winio"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "97e4973ce50b2ff5f09635a57e2b88a037aae829"
+  version = "v0.4.11"
+
+[[projects]]
   digest = "1:e92f5581902c345eb4ceffdcd4a854fb8f73cf436d47d837d1ec98ef1fe0a214"
   name = "github.com/StackExchange/wmi"
   packages = ["."]
@@ -39,6 +47,62 @@
   version = "v2.0.0-preview.5"
 
 [[projects]]
+  digest = "1:4ddc17aeaa82cb18c5f0a25d7c253a10682f518f4b2558a82869506eec223d76"
+  name = "github.com/docker/distribution"
+  packages = [
+    "digestset",
+    "reference",
+  ]
+  pruneopts = "UT"
+  revision = "40b7b5830a2337bb07627617740c0e39eb92800c"
+  version = "v2.7.0"
+
+[[projects]]
+  digest = "1:58287951ff22d1417122576c8c7ea36d9fea5bdf359c2691b440a4615c0086c3"
+  name = "github.com/docker/docker"
+  packages = [
+    "api/types",
+    "api/types/blkiodev",
+    "api/types/container",
+    "api/types/events",
+    "api/types/filters",
+    "api/types/mount",
+    "api/types/network",
+    "api/types/reference",
+    "api/types/registry",
+    "api/types/strslice",
+    "api/types/swarm",
+    "api/types/time",
+    "api/types/versions",
+    "api/types/volume",
+    "client",
+    "pkg/tlsconfig",
+  ]
+  pruneopts = "UT"
+  revision = "eef6495eddab52828327aade186443681ed71a4e"
+  version = "v17.03.2-ce-rc1"
+
+[[projects]]
+  digest = "1:811c86996b1ca46729bad2724d4499014c4b9effd05ef8c71b852aad90deb0ce"
+  name = "github.com/docker/go-connections"
+  packages = [
+    "nat",
+    "sockets",
+    "tlsconfig",
+  ]
+  pruneopts = "UT"
+  revision = "7395e3f8aa162843a74ed6d48e79627d9792ac55"
+  version = "v0.4.0"
+
+[[projects]]
+  digest = "1:6f82cacd0af5921e99bf3f46748705239b36489464f4529a1589bc895764fb18"
+  name = "github.com/docker/go-units"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "47565b4f722fb6ceae66b95f853feed578a4a51c"
+  version = "v0.3.3"
+
+[[projects]]
   digest = "1:c96d16a4451e48e2c44b2c3531fd8ec9248d822637f1911a88959ca0bcae4a64"
   name = "github.com/go-ole/go-ole"
   packages = [
@@ -55,6 +119,22 @@
   packages = ["."]
   pruneopts = "UT"
   revision = "0b12d6b5"
+
+[[projects]]
+  digest = "1:ee4d4af67d93cc7644157882329023ce9a7bcfce956a079069a9405521c7cc8d"
+  name = "github.com/opencontainers/go-digest"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "279bed98673dd5bef374d3b6e4b09e2af76183bf"
+  version = "v1.0.0-rc1"
+
+[[projects]]
+  digest = "1:cf31692c14422fa27c83a05292eb5cbe0fb2775972e8f1f8446a71549bd8980b"
+  name = "github.com/pkg/errors"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "ba968bfe8b2f7e042a574c888954fccecfa385b4"
+  version = "v0.8.1"
 
 [[projects]]
   digest = "1:a72773ea430bdf3f7e7dfb52ad6d64cf99df5b2f3d8788a18db9e7af161678ae"
@@ -81,14 +161,27 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:c4f2af053602f247b8625846cd88dfbf9295e3d02e82c58c27ebe3be06bef80c"
+  digest = "1:63c7bce98d2534e119bf2830e5152b3d5d58d9d1278d5184f0d05641996e9c8f"
+  name = "golang.org/x/net"
+  packages = [
+    "context",
+    "context/ctxhttp",
+    "internal/socks",
+    "proxy",
+  ]
+  pruneopts = "UT"
+  revision = "be1c187aa6c66b9daa1d9461c228d17e9dd2cab7"
+
+[[projects]]
+  branch = "master"
+  digest = "1:5ee4df7ab18e945607ac822de8d10b180baea263b5e8676a1041727543b9c1e4"
   name = "golang.org/x/sys"
   packages = [
     "unix",
     "windows",
   ]
   pruneopts = "UT"
-  revision = "cb59ee3660675d463e86971646692ea3e470021c"
+  revision = "48ac38b7c8cbedd50b1613c0fccacfc7d88dfcdf"
 
 [solve-meta]
   analyzer-name = "dep"
@@ -97,6 +190,9 @@
     "github.com/aws/aws-sdk-go-v2/aws",
     "github.com/aws/aws-sdk-go-v2/aws/external",
     "github.com/aws/aws-sdk-go-v2/service/cloudwatch",
+    "github.com/docker/docker/api/types",
+    "github.com/docker/docker/api/types/filters",
+    "github.com/docker/docker/client",
     "github.com/shirou/gopsutil/disk",
     "github.com/shirou/gopsutil/docker",
     "github.com/shirou/gopsutil/mem",
